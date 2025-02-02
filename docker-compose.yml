@@ -19,5 +19,30 @@ services:
     ports:
       - "8080:8080"
 
+  backend:
+    build: ./backend
+    container_name: backend-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    command: npm run dev
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run dev -- --host
+
 volumes:
   postgres_data:
