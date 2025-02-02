@@ -1,0 +1,13 @@
+# Ignorer les dépendances
+node_modules/
+
+# Ignorer les fichiers de build
+dist/
+
+# Ignorer les fichiers sensibles
+.env
+.env.local
+
+# Ignorer les fichiers spécifiques aux IDE
+.vscode/
+.idea/
