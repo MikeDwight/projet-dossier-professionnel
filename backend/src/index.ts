@@ -1,17 +1,19 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
-import { log } from "node:console";
+import authRoutes from "./routes/auth";
+import cardRoutes from "./routes/cards";
+import { errorHandler } from "./middlewares/errorMiddleware";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Bienvenue sur l'API Pokémon collection !");
-});
+app.use("/auth", authRoutes);
+app.use("/cards", cardRoutes);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🟢 Serveur demarré sur le port : ${PORT}`);
+  console.log(`🟢 Serveur démarré sur le port : ${PORT}`);
 });
