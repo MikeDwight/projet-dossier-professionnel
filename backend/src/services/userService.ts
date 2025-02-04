@@ -1,7 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+const prisma =
+  process.env.NODE_ENV === "test"
+    ? require("../../tests/__mocks__/prismaMock").default
+    : new PrismaClient();
+
+export default prisma;
 
 export const createUserService = async (
   email: string,

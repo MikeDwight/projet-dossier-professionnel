@@ -15,17 +15,14 @@ export const createUser = async (
 ): Promise<void> => {
   try {
     const { email, password, firstname, lastname } = req.body;
-    console.log("Requête reçue pour inscription:", req.body);
 
     const existingUser = await getUserByEmailService(email);
     if (existingUser) {
-      console.log("Utilisateur déjà existant !");
       res.status(400).json({ error: "L'utilisateur existe déjà" });
       return;
     }
 
     const user = await createUserService(email, password, firstname, lastname);
-    console.log("Utilisateur créé avec succès :", user);
 
     res.status(201).json({ message: "Utilisateur créé avec succès", user });
   } catch (error) {

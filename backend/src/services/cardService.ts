@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma =
+  process.env.NODE_ENV === "test"
+    ? require("../../tests/__mocks__/prismaMock").default
+    : new PrismaClient();
+
+export default prisma;
 
 export const createCardService = async (
   userId: string,
