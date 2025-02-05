@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { validateUser } from "../utils/validation";
 
 const prisma =
   process.env.NODE_ENV === "test"
@@ -14,6 +15,9 @@ export const createUserService = async (
   firstname: string,
   lastname: string
 ) => {
+  const error = validateUser(email, password);
+  if (error) throw new Error(error);
+
   const hashedPassword = await bcrypt.hash(password, 10);
   return await prisma.user.create({
     data: { email, password: hashedPassword, firstname, lastname },

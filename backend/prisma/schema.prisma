@@ -10,20 +10,20 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
-  password  String
-  lastname  String
-  firstname String
   createdAt DateTime @default(now())
+  password  String
+  firstname String
+  lastname  String
   cards     Card[]
 }
 
 model Card {
-  id        String @id @default(uuid())
-  name      String
-  number    Int
-  serie     String
-  bloc      String
-  condition String
-  userId    String
-  user      User   @relation(fields: [userId], references: [id])
+  id       String  @id @default(uuid())
+  name     String
+  number   Int
+  userId   String
+  bloc     String
+  serie    String
+  imageUrl String?
+  user     User    @relation(fields: [userId], references: [id])
 }
