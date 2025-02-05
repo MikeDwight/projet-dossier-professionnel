@@ -20,6 +20,8 @@ services:
       - "8080:8080"
 
   backend:
+    env_file:
+      - ./backend/.env.docker
     build: ./backend
     container_name: backend-app
     ports:

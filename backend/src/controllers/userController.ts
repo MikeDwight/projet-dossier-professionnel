@@ -56,8 +56,25 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       expiresIn: "1h",
     });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000,
+    });
+
     res.json({ message: "Connexion réussie", token });
   } catch (error) {
     res.status(500).json({ error: "Erreur serveur" });
   }
+};
+
+// Déconnexion
+export const logoutUser = async (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.json({ message: "Déconnexion réussie" });
 };
