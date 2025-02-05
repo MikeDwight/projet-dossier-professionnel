@@ -26,8 +26,12 @@ export const createUser = async (
 
     res.status(201).json({ message: "Utilisateur créé avec succès", user });
   } catch (error) {
-    console.error("Erreur dans createUser:", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    console.error("Erreur lors de la création de l'utilisateur:", error);
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Une erreur inconnue est survenue." });
+    }
   }
 };
 

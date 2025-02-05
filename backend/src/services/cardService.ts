@@ -13,10 +13,10 @@ export const createCardService = async (
   number: number,
   serie: string,
   bloc: string,
-  condition: string
+  imageUrl: string
 ) => {
   return await prisma.card.create({
-    data: { userId, name, number, serie, bloc, condition },
+    data: { userId, name, number, serie, bloc, imageUrl },
   });
 };
 

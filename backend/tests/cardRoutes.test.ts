@@ -19,21 +19,23 @@ describe("Card Routes", () => {
       id: "1",
       name: "Pikachu",
       number: 25,
-      serie: "Base Set",
-      bloc: "Wizards of the Coast",
-      condition: "Mint",
+      serie: "Set de base",
+      bloc: "1iere édition",
       userId: "1",
+      imageUrl: "https://images.pokemontcg.io/base1/25.png",
     });
 
     const res = await request(app)
       .post("/cards")
       .set("Authorization", `Bearer ${token}`)
       .send({
+        id: "1",
         name: "Pikachu",
-        number: "025",
-        serie: "Base Set",
-        bloc: "Wizards of the Coast",
-        condition: "Mint",
+        number: 25,
+        serie: "Set de base",
+        bloc: "1iere édition",
+        userId: "1",
+        imageUrl: "https://images.pokemontcg.io/base1/25.png",
       });
 
     expect(res.status).toBe(201);
@@ -46,15 +48,15 @@ describe("Card Routes", () => {
         id: "1",
         name: "Pikachu",
         number: 25,
-        serie: "Base Set",
-        bloc: "Wizards of the Coast",
-        condition: "Mint",
+        serie: "Set de base",
+        bloc: "1iere édition",
         userId: "1",
+        imageUrl: "https://images.pokemontcg.io/base1/25.png",
       },
     ]);
 
     const res = await request(app)
-      .get("/cards")
+      .get("/cards/:userId")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);

@@ -1,16 +1,11 @@
-export const validateUser = (
-  email: string,
-  password: string,
-  firstname: string,
-  lastname: string
-) => {
-  if (!email || !email.includes("@")) return "Email invalide";
-  if (!password || password.length < 6)
-    return "Le mot de passe doit contenir au moins 6 caractères";
-  if (!firstname || firstname.length < 2)
-    return "Le prénom doit contenir au moins 2 caractères";
-  if (!lastname || lastname.length < 2)
-    return "Le nom doit contenir au moins 2 caractères";
+export const validateUser = (email: string, password: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!emailRegex.test(email)) return "Email invalide.";
+  if (!passwordRegex.test(password))
+    return "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.";
   return null;
 };
 
@@ -19,13 +14,12 @@ export const validateCard = (
   number: number,
   serie: string,
   bloc: string,
-  condition: string
+  imageUrl: string
 ) => {
   if (!name) return "Le nom de la carte est obligatoire";
   if (!number || number <= 0)
     return "Le numéro de la carte doit être un entier positif";
   if (!serie) return "Le nom de la série est obligatoire";
   if (!bloc) return "Le nom du bloc est obligatoire";
-  if (!condition) return "La condition de la carte est obligatoire";
   return null;
 };

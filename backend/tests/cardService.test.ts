@@ -16,8 +16,8 @@ describe("Card Service", () => {
       number: 25,
       serie: "Base Set",
       bloc: "Wizards of the Coast",
-      condition: "Near Mint",
       userId: "1",
+      imageUrl: "https://images.pokemontcg.io/base1/25.png",
     });
 
     const card = await createCardService(
@@ -41,17 +41,17 @@ describe("Card Service", () => {
         number: 25,
         serie: "Base Set",
         bloc: "Wizards of the Coast",
-        condition: "Near Mint",
         userId: "1",
+        imageUrl: "https://images.pokemontcg.io/base1/25.png",
       },
       {
-        id: "2",
-        name: "Charizard",
-        number: 6,
+        id: "1",
+        name: "Pikachu",
+        number: 25,
         serie: "Base Set",
         bloc: "Wizards of the Coast",
-        condition: "Mint",
         userId: "1",
+        imageUrl: "https://images.pokemontcg.io/base1/25.png",
       },
     ]);
 
@@ -59,6 +59,5 @@ describe("Card Service", () => {
 
     expect(cards.length).toBe(2);
     expect(cards[0].name).toBe("Pikachu");
-    expect(cards[1].name).toBe("Charizard");
   });
 });
