@@ -3,6 +3,7 @@ import {
   createCardService,
   getCardsByUserService,
 } from "../services/cardService";
+import prisma from "../services/userService";
 
 export const createCard = async (
   req: Request,
@@ -23,7 +24,48 @@ export const createCard = async (
     res.status(201).json({ message: "Carte ajoutée avec succès", card });
   } catch (error) {
     const err = error as Error;
-    res.status(500).json({ error: "Erreur serveur", message: err.message });
+    res.status(500).json({
+      error: "Erreur lors de la création de la carte",
+      message: err.message,
+    });
+  }
+};
+
+export const deleteCard = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.card.delete({ where: { id } });
+    res.json({ message: "Carte supprimée avec succès" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la suppression de la carte" });
+  }
+};
+
+export const updateCard = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, number, serie, bloc, imageUrl } = req.body;
+
+  try {
+    const card = await prisma.card.update({
+      where: { id },
+      data: {
+        name,
+        number,
+        serie,
+        bloc,
+        imageUrl,
+      },
+    });
+    res.status(200).json({ message: "Carte modifiée avec succès", card });
+  } catch (error) {
+    const err = error as Error;
+    res.status(500).json({
+      error: "Erreur lors de la modification de la carte",
+      message: err.message,
+    });
   }
 };
 
