@@ -1,0 +1,107 @@
+/* Général */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Bouton ajouter une carte */
+.add-card-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.add-card-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Grille des cartes */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Style des cartes */
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.card p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Boutons Modifier et Supprimer */
+.card button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.card button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.card button:first-child:hover {
+  background-color: #218838;
+}
+
+.card button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.card button:last-child:hover {
+  background-color: #c82333;
+}
