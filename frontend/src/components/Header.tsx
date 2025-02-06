@@ -6,13 +6,10 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch(
-        "https://projet-dossier-professionnel.onrender.com/auth/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      await fetch("http://localhost:5000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
 
       navigate("/login");
     } catch (error) {
