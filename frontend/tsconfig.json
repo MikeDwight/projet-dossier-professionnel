@@ -10,5 +10,10 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["jest", "@testing-library/jest-dom", "node"]
   },
-  "include": ["src", "jest.setup.js"]
+  "include": [
+    "src",
+    "jest.setup.ts",
+    "**/__tests__/**/*.ts",
+    "**/__tests__/**/*.tsx"
+  ]
 }
