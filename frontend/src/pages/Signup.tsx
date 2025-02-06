@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/signup.css";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -34,11 +35,9 @@ export default function Signup() {
 
       console.log("Inscription réussie :", data);
 
-      // Stocker le token si nécessaire
       localStorage.setItem("token", data.token);
 
-      // Rediriger vers le dashboard
-      navigate("/dashboard");
+      navigate("/login");
     } catch (err: any) {
       console.error("Erreur d'inscription :", err);
       setError(err.message);
@@ -46,7 +45,7 @@ export default function Signup() {
   };
 
   return (
-    <div>
+    <div className="container-signup">
       <h2>Inscription</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
       {/* Affichage des erreurs */}

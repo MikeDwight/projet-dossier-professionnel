@@ -3,6 +3,7 @@ import CardItem from "../components/CardItem";
 import CardForm from "../components/CardForm";
 import { fetchUserCards, deleteCard, Card } from "../services/cardService";
 import "../styles/dashboard.css";
+import "../styles/global.css";
 
 export default function Dashboard() {
   const [cards, setCards] = useState<Card[]>([]);
@@ -24,7 +25,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="container">
       <header className="dashboard-header">
         <h2>Ma collection</h2>
         <div className="dashboard-actions">

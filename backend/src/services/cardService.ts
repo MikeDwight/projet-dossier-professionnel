@@ -23,3 +23,23 @@ export const createCardService = async (
 export const getCardsByUserService = async (userId: string) => {
   return await prisma.card.findMany({ where: { userId } });
 };
+
+export const deleteCardService = async (cardId: string) => {
+  return await prisma.card.delete({
+    where: { id: cardId },
+  });
+};
+
+export const updateCardService = async (
+  cardId: string,
+  name: string,
+  number: number,
+  serie: string,
+  bloc: string,
+  imageUrl: string
+) => {
+  return await prisma.card.update({
+    where: { id: cardId },
+    data: { name, number, serie, bloc, imageUrl },
+  });
+};
