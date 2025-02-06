@@ -6,6 +6,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -15,6 +16,12 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
+
+    if (!formData.email || !formData.password) {
+      setError("Veuillez remplir tous les champs");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
@@ -29,6 +36,8 @@ export default function Login() {
         throw new Error(data.error || "Email ou mot de passe incorrect.");
       }
 
+      const data = await response.json();
+      setSuccessMessage(data.message || "Connexion réussie");
       navigate("/dashboard");
     } catch (err: any) {
       setError(err.message);
@@ -39,6 +48,7 @@ export default function Login() {
     <div className="auth-container">
       <h2>Connexion</h2>
       {error && <p className="error-message">{error}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
 
       <form onSubmit={handleSubmit}>
         {["email", "password"].map((field) => (
@@ -49,7 +59,6 @@ export default function Login() {
             placeholder={field === "email" ? "Email" : "Mot de passe"}
             value={formData[field as keyof typeof formData]}
             onChange={handleChange}
-            required
           />
         ))}
 
