@@ -7,7 +7,7 @@ export interface Card {
   imageUrl: string;
 }
 
-const API_URL = "http://localhost:5000/cards";
+const API_URL = "https://projet-dossier-professionnel.onrender.com";
 
 export const fetchUserCards = async (): Promise<Card[]> => {
   const response = await fetch(`${API_URL}/userId`, { credentials: "include" });

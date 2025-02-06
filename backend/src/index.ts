@@ -12,6 +12,11 @@ const app = express();
 export default app;
 app.use(express.json());
 
+const allowedOrigins = [
+  "http://mon-projet-pokemon.surge.sh",
+  "https://projet-dossier-professionnel.onrender.com",
+];
+
 app.use(
   cors({
     origin: "http://localhost:5173",
