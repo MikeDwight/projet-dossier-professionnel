@@ -2,6 +2,14 @@ import request from "supertest";
 import app from "../src/index";
 import prismaMock from "./__mocks__/prismaMock";
 import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+
+jest.mock("../src/middlewares/authMiddleware", () => ({
+  authMiddleware: (req: Request, res: Response, next: NextFunction) => {
+    req.body.user = { id: "1" };
+    next();
+  },
+}));
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 

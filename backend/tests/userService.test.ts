@@ -13,7 +13,7 @@ describe("User Service", () => {
     prismaMock.user.create.mockResolvedValue({
       id: "1",
       email: "test@example.com",
-      password: "hashedpassword",
+      password: "password1A*",
       firstname: "John",
       lastname: "Doe",
       createdAt: new Date(),
@@ -21,7 +21,7 @@ describe("User Service", () => {
 
     const user = await createUserService(
       "test@example.com",
-      "password123",
+      "password1A*",
       "John",
       "Doe"
     );
@@ -34,7 +34,7 @@ describe("User Service", () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: "1",
       email: "test@example.com",
-      password: "hashedpassword",
+      password: "password1A*",
       firstname: "John",
       lastname: "Doe",
       createdAt: new Date(),

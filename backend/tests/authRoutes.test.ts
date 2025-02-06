@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../src/index";
-import prismaMock from "./__mocks__/prismaMock";
 import bcrypt from "bcrypt";
+import prismaMock from "./__mocks__/prismaMock";
 
 describe("Auth Routes", () => {
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe("Auth Routes", () => {
     prismaMock.user.create.mockResolvedValue({
       id: "1",
       email: "test@example.com",
-      password: "hashedpassword",
+      password: "password1A*",
       firstname: "John",
       lastname: "Doe",
       createdAt: new Date(),
@@ -20,7 +20,7 @@ describe("Auth Routes", () => {
 
     const res = await request(app).post("/auth/signup").send({
       email: "test@example.com",
-      password: "password123",
+      password: "password1A*",
       firstname: "John",
       lastname: "Doe",
     });
@@ -32,7 +32,7 @@ describe("Auth Routes", () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: "1",
       email: "test@example.com",
-      password: await bcrypt.hash("password123", 10),
+      password: await bcrypt.hash("password1A*", 10),
       firstname: "John",
       lastname: "Doe",
       createdAt: new Date(),
@@ -40,7 +40,7 @@ describe("Auth Routes", () => {
 
     const res = await request(app).post("/auth/login").send({
       email: "test@example.com",
-      password: "password123",
+      password: "password1A*",
     });
 
     expect(res.status).toBe(200);
