@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: pokedb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v3
+
+      - name: 🔧 Configuration de Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Installation des dépendances Backend
+        run: |
+          cd backend
+          npm install
+
+      - name: 🚀 Lancement des tests Backend
+        run: |
+          cd backend
+          npm run test
+
+      - name: Installation des dépendances Frontend
+        run: |
+          cd frontend
+          npm install
+
+      - name: Lancement des tests Frontend
+        run: |
+          cd frontend
+          npm run test
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Déploiement de l'application (Docker)
+        run: |
+          docker compose up --build
