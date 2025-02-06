@@ -22,7 +22,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready"
+          --health-cmd "pg_isready -U user"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -39,19 +39,33 @@ jobs:
       - name: 📦 Installation des dépendances Backend
         run: |
           cd backend
-          npm install
+          npm ci  # Utilisation de ci pour plus de stabilité
+
+      - name: ⏱️ Attente de PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U user; do
+            echo "Attente de PostgreSQL..."
+            sleep 2
+          done
 
       - name: 🚀 Lancement des tests Backend
+        env:
+          DATABASE_URL: postgres://user:password@localhost:5432/pokedb
         run: |
           cd backend
           npm run test
 
-      - name: Installation des dépendances Frontend
+      - name: 📦 Installation des dépendances Frontend
         run: |
           cd frontend
-          npm install
+          npm ci
 
-      - name: Lancement des tests Frontend
+      - name: ⚡ Build du Frontend
+        run: |
+          cd frontend
+          npm run build  # Ajout du build avant les tests
+
+      - name: 🚀 Lancement des tests Frontend
         run: |
           cd frontend
           npm run test
@@ -62,14 +76,13 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout du code
+      - name: 📥 Checkout du code
         uses: actions/checkout@v3
 
-      - name: Clean Docker environment
+      - name: 🧹 Nettoyage des anciens conteneurs Docker
         run: |
-          docker system prune -af
-          docker volume prune -f
+          docker compose down -v  # Supprime les volumes et conteneurs existants
 
-      - name: Déploiement de l'application (Docker)
+      - name: 🚀 Déploiement de l'application (Docker)
         run: |
-          docker compose up --build
+          docker compose up --build -d  # Déploiement en arrière-plan
