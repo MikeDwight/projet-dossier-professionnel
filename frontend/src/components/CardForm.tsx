@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, addCard, updateCard } from "../services/cardService";
 
 interface CardFormProps {
@@ -14,18 +14,34 @@ export default function CardForm({
   onSuccess,
   onCancel,
 }: CardFormProps) {
-  const [formData, setFormData] = useState<Omit<Card, "id">>(
-    initialData || { name: "", number: 0, serie: "", bloc: "", imageUrl: "" }
-  );
+  const [formData, setFormData] = useState<Omit<Card, "id">>({
+    name: "",
+    number: 0,
+    serie: "",
+    bloc: "",
+    imageUrl: "",
+  });
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    if (initialData) setFormData(initialData);
+  }, [initialData]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "number" ? Number(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      if (cardId) {
-        await updateCard(cardId, { id: cardId, ...formData });
-      } else {
-        await addCard(formData);
-      }
+      cardId
+        ? await updateCard(cardId, { id: cardId, ...formData })
+        : await addCard(formData);
       onSuccess();
     } catch (error) {
       setErrorMessage("Erreur lors de l'opération.");
@@ -33,48 +49,26 @@ export default function CardForm({
   };
 
   return (
-    <div className="card-form">
-      <label>Nom :</label>
-      <input
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-      />
-
-      <label>Numéro :</label>
-      <input
-        type="number"
-        value={formData.number}
-        onChange={(e) =>
-          setFormData({ ...formData, number: Number(e.target.value) })
-        }
-      />
-
-      <label>Série :</label>
-      <input
-        type="text"
-        value={formData.serie}
-        onChange={(e) => setFormData({ ...formData, serie: e.target.value })}
-      />
-
-      <label>Bloc :</label>
-      <input
-        type="text"
-        value={formData.bloc}
-        onChange={(e) => setFormData({ ...formData, bloc: e.target.value })}
-      />
-
-      <label>Image URL :</label>
-      <input
-        type="text"
-        value={formData.imageUrl}
-        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-      />
+    <form onSubmit={handleSubmit} className="card-form">
+      <h3>{cardId ? "Modifier une carte" : "Ajouter une carte"}</h3>
+      {["name", "number", "serie", "bloc", "imageUrl"].map((field) => (
+        <input
+          key={field}
+          type={field === "number" ? "number" : "text"}
+          name={field}
+          placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+          value={formData[field as keyof Omit<Card, "id">] as string | number}
+          onChange={handleChange}
+          required={field !== "imageUrl"}
+        />
+      ))}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <button onClick={handleSubmit}>{cardId ? "Modifier" : "Ajouter"}</button>
-      <button onClick={onCancel}>Annuler</button>
-    </div>
+      <button type="submit">{cardId ? "Enregistrer" : "Ajouter"}</button>
+      <button type="button" onClick={onCancel}>
+        Annuler
+      </button>
+    </form>
   );
 }

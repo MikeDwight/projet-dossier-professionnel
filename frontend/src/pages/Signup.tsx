@@ -5,15 +5,16 @@ import "../styles/signup.css";
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
     firstname: "",
     lastname: "",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,57 +28,35 @@ export default function Signup() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
+        const data = await response.json();
         throw new Error(data.error || "Erreur lors de l'inscription.");
       }
 
-      console.log("Inscription réussie :", data);
-
-      localStorage.setItem("token", data.token);
-
       navigate("/login");
     } catch (err: any) {
-      console.error("Erreur d'inscription :", err);
       setError(err.message);
     }
   };
 
   return (
-    <div className="container-signup">
+    <div className="auth-container">
       <h2>Inscription</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      {/* Affichage des erreurs */}
+      {error && <p className="error-message">{error}</p>}
+
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="firstname"
-          placeholder="Prénom"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="lastname"
-          placeholder="Nom"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          onChange={handleChange}
-          required
-        />
+        {["firstname", "lastname", "email", "password"].map((field) => (
+          <input
+            key={field}
+            type={field === "password" ? "password" : "text"}
+            name={field}
+            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+            value={formData[field as keyof typeof formData]}
+            onChange={handleChange}
+            required
+          />
+        ))}
+
         <button type="submit">S'inscrire</button>
       </form>
     </div>

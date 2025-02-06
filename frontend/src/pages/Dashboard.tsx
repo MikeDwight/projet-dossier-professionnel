@@ -3,45 +3,47 @@ import CardItem from "../components/CardItem";
 import CardForm from "../components/CardForm";
 import { fetchUserCards, deleteCard, Card } from "../services/cardService";
 import "../styles/dashboard.css";
-import "../styles/global.css";
 
 export default function Dashboard() {
   const [cards, setCards] = useState<Card[]>([]);
-  const [editingCardId, setEditingCardId] = useState<string | null>(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-
-  useEffect(() => {
-    refreshCards();
-  }, []);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   const refreshCards = async () => {
     const fetchedCards = await fetchUserCards();
     setCards(fetchedCards);
   };
 
-  const handleDeleteCard = async (cardId: string) => {
+  useEffect(() => {
+    refreshCards();
+  }, []);
+
+  const handleDelete = async (cardId: string) => {
     await deleteCard(cardId);
     refreshCards();
   };
 
   return (
-    <div className="container">
-      <header className="dashboard-header">
-        <h2>Ma collection</h2>
-        <div className="dashboard-actions">
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="add-card-btn"
-          >
-            {showAddForm ? "Annuler" : "Ajouter"}
-          </button>
-        </div>
-      </header>
+    <div className="dashboard-container">
+      <h2>Ma collection de cartes Pokémon</h2>
+      <button
+        onClick={() => {
+          setIsFormVisible(true);
+          setSelectedCard(null);
+        }}
+      >
+        {isFormVisible ? "Annuler" : "Ajouter une carte"}
+      </button>
 
-      {showAddForm && (
+      {isFormVisible && (
         <CardForm
-          onSuccess={refreshCards}
-          onCancel={() => setShowAddForm(false)}
+          initialData={selectedCard || undefined}
+          cardId={selectedCard?.id}
+          onSuccess={() => {
+            refreshCards();
+            setIsFormVisible(false);
+          }}
+          onCancel={() => setIsFormVisible(false)}
         />
       )}
 
@@ -50,23 +52,14 @@ export default function Dashboard() {
           <CardItem
             key={card.id}
             card={card}
-            onEdit={() => setEditingCardId(card.id)}
-            onDelete={() => handleDeleteCard(card.id)}
+            onEdit={() => {
+              setSelectedCard(card);
+              setIsFormVisible(true);
+            }}
+            onDelete={() => handleDelete(card.id)}
           />
         ))}
       </div>
-
-      {editingCardId && (
-        <CardForm
-          cardId={editingCardId}
-          initialData={cards.find((c) => c.id === editingCardId)}
-          onSuccess={() => {
-            setEditingCardId(null);
-            refreshCards();
-          }}
-          onCancel={() => setEditingCardId(null)}
-        />
-      )}
     </div>
   );
 }
